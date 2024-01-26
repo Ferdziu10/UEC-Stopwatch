@@ -73,7 +73,7 @@ module stopwatch
 
 //------------------------------------------------------------------------------
 // control module for 7-segment display
-
+    wire [3:0] sseg_an_control;
     sseg_x4 u_sseg_x4
     (
         .clk (clk400Hz), //posedge active clock
@@ -83,10 +83,24 @@ module stopwatch
         .bcd2 (bcd2),
         .bcd3 (bcd3),
         .sseg_ca(sseg_ca),
-        .sseg_an(sseg_an)
+        .sseg_an(sseg_an_control)
     );
  //-------------------------------------------------------------------------------------
-    
-    
+    wire pwm;
+    pwm_module u_pwm
+    (
+        .clk (clk400Hz),
+        .rst (rst),
+        .duty_cycle (sw),
+        .pwm_out (pwm)
+    );
+    anode_pwm_control u_anode
+    (
+        .sseg_an_control (sseg_an_control),
+        .pwm (pwm),
+        .sseg_an (sseg_an)
+    );
+         
+        
     
 endmodule
