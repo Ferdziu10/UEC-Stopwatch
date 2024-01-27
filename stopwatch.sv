@@ -13,6 +13,8 @@
  * 18 Jan 2023, LK - ported to SystemVerilog
  * 24 Jan 2024, KF - changed module clk_divider to top_clk_divider
  * 24 Jan 2024, KF - added bcd3 in u_bin and increased value of bin
+ * 26 Jan 2024, KF - added pwm and anode module
+ * 27 Jan 2024, KF - added minutes module
  *******************************************************************************/
 module stopwatch
     (
@@ -23,7 +25,8 @@ module stopwatch
         input  wire [7:0] sw,
         // 7-segment display control (common anode)
         output wire [6:0] sseg_ca,   // segments (active LOW)
-        output wire [3:0] sseg_an    // anode enable (active LOW)
+        output wire [3:0] sseg_an,    // anode enable (active LOW)
+        output wire [9:0]   LED
     );
 
     wire        clk100Hz;    // main stopper clock
@@ -100,7 +103,12 @@ module stopwatch
         .pwm (pwm),
         .sseg_an (sseg_an)
     );
-         
+    minutes_counter u_minutes
+    (
+        .clk (clk100Hz),
+        .rst (rst),
+        .minutes_led (LED)
+    );         
         
     
 endmodule
